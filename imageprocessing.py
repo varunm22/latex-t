@@ -63,8 +63,13 @@ def divide_lines(full_array):
 		elif in_block and sums[i] != 0:
 			curr_block.append(i)
 
+	array_blocks = []
 
-	return line_blocks
+	for i in line_blocks:
+		array_blocks.append(full_array[i, :])
+
+
+	return array_blocks
 
 
 def main (image_filename):
