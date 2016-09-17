@@ -47,7 +47,6 @@ def divide_lines(full_array):
 
 	sums = np.sum(full_array, axis=1)
 
-	print sums.size
 	
 	in_block = False
 	curr_block = []
