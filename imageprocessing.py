@@ -30,11 +30,14 @@ def image_to_pixel_array (image_filename):
 	for i in l:
 		ix[i[0], i[1]] = (0,0,0)
 	
-	final_array = np.zeroes([im.size[1], im.size[0]], int)
+	final_array = np.zeros([im.size[1], im.size[0]], int)
 
 	for i in range(im.size[0]):
 		for j in range(im.size[1]):
-			final_array[j, i] = ix[i, j]
+			if ix[i, j] == (0,0,0): 
+				final_array[j,i] = 1
+			else:
+				final_array[j,i] = 0
 
 	return final_array
 
@@ -42,13 +45,31 @@ def divide_lines(full_array):
 
 	line_blocks = []
 
-#	sums = 
+	sums = np.sum(full_array, axis=1)
+
+	print sums.size
+	
+	in_block = False
+	curr_block = []
+
+	for i in range(len(sums)):
+		if not in_block and sums[i] != 0:
+			in_block = True
+			curr_block.append(i)
+		elif in_block and sums[i] == 0:
+			in_block = False
+			line_blocks.append(curr_block)
+			curr_block = []
+		elif in_block and sums[i] != 0:
+			curr_block.append(i)
+
 
 	return line_blocks
 
 
 def main (image_filename):
-	image_to_pixel_array(image_filename)
+	pixel_array = image_to_pixel_array(image_filename)
+	divide_lines(pixel_array)
 
 
 main('examples/eq3.jpg')
