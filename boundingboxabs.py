@@ -32,7 +32,9 @@ def interpret_boxes(boxes, codes):
 	threshold = (float(max_y)/2)
 	
 	boxes = sorted(boxes,key=lambda x: x[0][1])
-	endpoints.sort(key=lambda x: x[0])	
+	endpoints = sorted(endpoints,key=lambda x: x[0])
+	print "Endpoints are"
+	print endpoints	
 	#Now we should have a list of boxes sorted by left edge x
 	#As well as a list of endpoints sorted by x position
 	#We should run through the list, checking to see if things are superscript/subscript
@@ -60,6 +62,7 @@ def interpret_boxes(boxes, codes):
 
 	#keyed by two(twople)ple
 	#position, superscript, subscript, [top equal, bottom equal], [top frac, bar frac, bot frac]
+	print "Start parsing!"
 	for i in range(len(endpoints)):
 		#Basically, hash the endpoints by the box that they contain and maintain a "minus counter",
 		#a "layer counter", and basically your output should be a series of unique "items"
@@ -74,8 +77,9 @@ def interpret_boxes(boxes, codes):
 			if endpoints[i][2][1][0] < threshold:
 				superscript = True
 
-			box_dict[endpoints[i][2]] = {'pos': j, 'super': superscript, 'equal': None, 'frac': None}
+			box_dict[endpoints[i][2]] = {'pos': j, 'super': superscript, 'equal': None, 'frac': None, 'text': unicodedict[endpoints[i][2]]}
 			j += 1
+			print unicodedict[endpoints[i][2]]
 
 		if layer_count == 3:
 			box_dict[endpoints[i][2]][frac] = [endpoints[i-2][2],endpoints[i-1][2],endpoints[i][2]]
@@ -85,7 +89,8 @@ def interpret_boxes(boxes, codes):
 		if minus_count == 2:
 			box_dict[endpoints[i][2]][equal] = [endpoints[i][2],endpoints[i-1][2]]
 			box_dict[endpoints[i-1][2]][equal] = [endpoints[i][2],endpoints[i-1][2]]			
-			
+		
+		
 		else:
 			if unicodedict[endpoints[i][2]] == '-':
 				minus_count -= 1

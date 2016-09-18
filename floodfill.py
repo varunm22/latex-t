@@ -67,8 +67,8 @@ def DFS(i,j,counter,arr,folderstring):
 
 	max_x=0
 	max_y=0
-	min_x=arr.shape[1]
-        min_y=arr.shape[0]
+	min_x=arr.shape[0]
+        min_y=arr.shape[1]
 
 	character_size = 0
 	add = 0
