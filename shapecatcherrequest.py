@@ -17,8 +17,13 @@ def unicode_list(n, line):
 
 		possibilities.append(matches)
 
+	for i in range(len(possibilities)):  
+		if len(possibilities[i]) == 0:
+			possibilities[i] = [45]
+
 
 	for i in possibilities:
+		print i
 		codes.append(unicodefinder(i))
 		
 	return codes

@@ -7,24 +7,41 @@ def interpret_boxes(boxes, codes):
 	max_x = 0
 	max_y = 0
 
-	interval_left = [None]*max_x
-	interval_right = [None]*max_x
-	interval_level = [None]*max_x
 
 	for box in boxes:
 		tl, br = box
-		tx, ty = tl
-		bx, by = br
+		ty, tx = tl
+		by, bx = br
+
 
 		if bx > max_x:
 			max_x = bx
 		if by > max_y:
 			max_y = by
 
+
 		spatial[float(tx+bx)/2] = box
 
+		print box, max_x
+	
+	print max_x
+
+	interval_left = [None]*(max_x+1)
+	interval_right = [None]*(max_x+1)
+	interval_level = [None]*(max_x+1)
+
+	for box in boxes:
+		tl, br = box
+		ty, tx = tl
+		by, bx = br
+
+		if bx >= len(interval_right):
+			print bx, len(interval_right)
 		interval_left[tx] = box
 		interval_right[bx] = box
+
+
+
 
 	layers = []
 	fractions = set()
@@ -43,14 +60,14 @@ def interpret_boxes(boxes, codes):
 	spatial_boxes = []
 
 	for i in range(len(spatial_list)):
-		box_dict[spatial[spatial_list[i]]] = {'pos': i, 'super' = False, 'sub' = False, 'frac': None}
+		box_dict[spatial[spatial_list[i]]] = {'pos': i, 'super':  False, 'sub' : False, 'frac': None, 'equal' : None}
 		spatial_boxes.append(spatial[spatial_list[i]])
 
 
 	for box in boxes: 
 		tl, br = box
-		tx, ty = tl
-		bx, by = br
+		ty, tx = tl
+		by, bx = br
 		pos = box_dict[box]['pos']
 
 		if by < max_y/2 and pos >= 1:

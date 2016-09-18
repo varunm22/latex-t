@@ -38,9 +38,10 @@ def floodfill(arr,line):
 		for j in xrange(image_width):
 			#print visited[i,j]
 			if ((visited[i,j]==0) and (arr[i,j]==1)):
-				chartuple = DFS(i,j,count,arr,folderstring)
-				characters.append(chartuple)
-				count +=1
+				chartuple,add = DFS(i,j,count,arr,folderstring)
+				if add == 1:
+					characters.append(chartuple)
+					count +=add
 			visited[i,j]=1
 				
 
@@ -65,7 +66,7 @@ def DFS(i,j,counter,arr,folderstring):
         min_y=arr.shape[0]
 
 	character_size = 0
-	
+	add = 0
 	while dfs.empty() is False:
 		current = dfs.get()
 		#print current
@@ -105,10 +106,11 @@ def DFS(i,j,counter,arr,folderstring):
 			out_array = out_array[:,vert:]
 		outstring = folderstring + '/outfile'+str(counter)+'.png'
 		scipy.misc.imsave(outstring, out_array)
+		add = 1
 	#print character_size
 	bottom_corner = (min_x,min_y)
 	top_corner = (max_x,max_y)
-	return (bottom_corner,top_corner)
+	return (bottom_corner,top_corner),add
 
 
 def hackywhitespaceremover(blah_array):
