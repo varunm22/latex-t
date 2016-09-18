@@ -42,6 +42,5 @@ def unicodefinder(poss):
 		#		return poss[i]
 		if poss[i] in symboldict:
 			return symboldict[poss[i]]
-		else:
-			return '-'
+	return '-'
 
