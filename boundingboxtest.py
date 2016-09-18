@@ -35,8 +35,6 @@ def interpret_boxes(boxes, codes):
 		ty, tx = tl
 		by, bx = br
 
-		if bx >= len(interval_right):
-			print bx, len(interval_right)
 		interval_left[tx] = box
 		interval_right[bx] = box
 
@@ -46,10 +44,11 @@ def interpret_boxes(boxes, codes):
 	layers = []
 	fractions = set()
 
-	for i in range(max_x):
+	for i in range(max_x+1):
 		if interval_left[i] != None:
 			layers.append(interval_left[i])
 		if interval_right[i] != None:
+			print layers, i
 			del layers[layers.index(interval_right[i])]
 
 		interval_level[i] = layers
