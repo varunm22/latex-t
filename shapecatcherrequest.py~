@@ -1,0 +1,18 @@
+import requests  
+import re
+
+files = {'file': (open('examples/sample.png', 'rb'))}
+
+r = requests.post('http://shapecatcher.com/engine/engine/filepost', files = files)
+
+
+
+matches = re.findall(r'Unicode hexadecimal: 0x([0-9a-f]{4})', r.text)
+
+matches = [int(x, base=16) for x in matches]
+
+print len(matches)
+
+print matches
+
+print matches[0]
