@@ -5,22 +5,20 @@ def convert(box_info, spatial_list, codes):
 	i = 0
 	while i < len(spatial_list):
 		if box_info[spatial_list[i]]['frac'] != None:
-			latex_string.append("\\frac{"+ codes[spatial_list[i]] + '}{')
+			latex_string+="\\frac{"+ codes[spatial_list[i]] + '}{'
 			i += 2
-			latex_string.append(codes[spatial_list[i]] + '}')
+			latex_string+=codes[spatial_list[i]] + '}'
 
 		elif box_info[spatial_list[i]]['equal'] != None:
-			latex_string.append("=")
+			latex_string+="="
 			i+=1
 
 		elif box_info[spatial_list[i]]['super']:
-			latex_string.append('^'+codes[spatial_list[i]])
-		elif box_info[spatial_list[i]]['sub']:
-			latex_string.append('_'+codes[spatial_list[i]])
-		latex_string.append(codes[spatial_list[i]])
+			latex_string+='^'
+		latex_string+= codes[spatial_list[i]]
 		i += 1
 
-	latex_string.append('$ \n \n')
+	latex_string+='$ \n \n'
 
 	text_file = open("output.tex", "a")
 	text_file.write(latex_string)

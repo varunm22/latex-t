@@ -1,12 +1,13 @@
 import imageprocessing
 import floodfill
 import shapecatcherrequest
-import boundingboxtest
+import boundingboxabs
 import latex_conversion
 
 import sys
+import os
 
-def main(image_filename, email):
+def main(image_filename):
 	open('output.tex', 'w').close()
 	pixel_array = imageprocessing.image_to_pixel_array (image_filename)
 	line_blocks = imageprocessing.divide_lines (pixel_array)
@@ -22,12 +23,16 @@ def main(image_filename, email):
 		print n
 
 
-		box_info, spatial_list, codes = boundingboxtest.interpret_boxes(bounding_boxes, codes) # need to add equals and debug
+		box_info, spatial_list, codes = boundingboxabs.interpret_boxes(bounding_boxes, codes) # need to debug
+
+		latex_conversion.convert(box_info, spatial_list, codes)
+	
+os.system("notepad.exe output.tex")
 
 
-print sys.argv[1], sys.argv[2]
 
-main(sys.argv[1], sys.argv[2])
+
+main(sys.argv[1])
 
 
 
