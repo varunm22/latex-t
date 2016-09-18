@@ -26,17 +26,15 @@ def interpret_boxes(boxes, codes):
 	
 	print max_x
 
-	interval_left = [None]*max_x
-	interval_right = [None]*max_x
-	interval_level = [None]*max_x
+	interval_left = [None]*(max_x+1)
+	interval_right = [None]*(max_x+1)
+	interval_level = [None]*(max_x+1)
 
 	for box in boxes:
 		tl, br = box
 		ty, tx = tl
 		by, bx = br
 
-		if bx >= len(interval_right):
-			print bx, len(interval_right)
 		interval_left[tx] = box
 		interval_right[bx] = box
 
@@ -50,6 +48,7 @@ def interpret_boxes(boxes, codes):
 		if interval_left[i] != None:
 			layers.append(interval_left[i])
 		if interval_right[i] != None:
+			print layers, i
 			del layers[layers.index(interval_right[i])]
 
 		interval_level[i] = layers
