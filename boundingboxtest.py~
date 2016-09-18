@@ -1,4 +1,4 @@
-def interpret_boxes(boxes, codes):
+def interpret_boxes(boxes, codes, unicode_dict):
 
 	spatial = {}
 
@@ -44,7 +44,7 @@ def interpret_boxes(boxes, codes):
 	layers = []
 	fractions = set()
 
-	for i in range(max_x):
+	for i in range(max_x+1):
 		if interval_left[i] != None:
 			layers.append(interval_left[i])
 		if interval_right[i] != None:
@@ -84,7 +84,8 @@ def interpret_boxes(boxes, codes):
 			box_dict[i]['frac'] = frac_list
 
 	
-	return box_dict
+	return box_dict, spatial_boxes
+
 
 
 
