@@ -17,6 +17,8 @@ MAX_WIDTH = 960
 visited = np.zeros(shape=(MAX_HEIGHT,MAX_WIDTH),dtype=int)
 
 def floodfill(arr,line):
+	#visited = np.zeros(shape=(MAX_HEIGHT,MAX_WIDTH),dtype=int)
+
 	#teststring = line+'.png'
 	#scipy.misc.imsave(teststring, arr)
 
@@ -26,6 +28,9 @@ def floodfill(arr,line):
 	image_height=arr_shape[0]
 	image_width=arr_shape[1]
 	
+	for i in xrange(image_height):
+		for j in xrange(image_width):
+			visited[i,j] = 0
 	folderstring = 'outputimages'+line
 	os.system('rm -r '+folderstring)
 	os.system('mkdir '+folderstring)
