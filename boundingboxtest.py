@@ -16,6 +16,8 @@ def interpret_boxes(boxes, codes):
 		tx, ty = tl
 		bx, by = br
 
+		print 'box: ' + str(box)
+
 		if bx > max_x:
 			max_x = bx
 		if by > max_y:
@@ -23,6 +25,8 @@ def interpret_boxes(boxes, codes):
 
 		spatial[float(tx+bx)/2] = box
 
+		if tx >= len(interval_left):
+			print tx, len(interval_left)
 		interval_left[tx] = box
 		interval_right[bx] = box
 
@@ -43,7 +47,7 @@ def interpret_boxes(boxes, codes):
 	spatial_boxes = []
 
 	for i in range(len(spatial_list)):
-		box_dict[spatial[spatial_list[i]]] = {'pos': i, 'super' = False, 'sub' = False, 'frac': None}
+		box_dict[spatial[spatial_list[i]]] = {'pos': i, 'super':  False, 'sub' : False, 'frac': None, 'equal' : None}
 		spatial_boxes.append(spatial[spatial_list[i]])
 
 

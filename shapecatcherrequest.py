@@ -17,8 +17,13 @@ def unicode_list(n, line):
 
 		possibilities.append(matches)
 
+	for i in range(len(possibilities)):  
+		if len(possibilities[i]) == 0:
+			possibilities[i] = [45]
+
 
 	for i in possibilities:
+		print i
 		codes.append(unicodefinder(i))
 		
 	return codes
@@ -27,6 +32,8 @@ def unicode_list(n, line):
 def unicodefinder(poss):
 	forbidden = [42, 44, 46, 48, 61, 63, 75, 96, 123]
 	for i in range(len(poss)):
+		if (poss[i] == 945):
+			poss[i] = 97
 		if ((poss[i] >= 40) and (poss[i] <= 124)):
 			if poss[i] not in forbidden:
 				return poss[i]
