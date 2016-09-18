@@ -84,7 +84,8 @@ def interpret_boxes(boxes, codes):
 			box_dict[i]['frac'] = frac_list
 
 	
-	return box_dict
+	return box_dict, spatial_boxes, codes
+
 
 
 
