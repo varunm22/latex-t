@@ -5,19 +5,20 @@ import re
 def unicode_list(n, line):
 
 	possibilities = []
+	codes = []
 
 	for i in range(1,n+1):
-		files = {'file': (open('outputimages'+n+'/outfile'+str(n), 'rb'))}
+		files = {'file': (open('outputimages'+line+'/outfile'+str(i)+'.png', 'rb'))}
 		r = requests.post('http://shapecatcher.com/engine/engine/filepost', files = files)
 		
                 matches = re.findall(r'Unicode hexadecimal: 0x([0-9a-f]{4})', r.text)
                 
                 matches = [int(x, base=16) for x in matches]
 
-	possibilities.append(matches)
+		possibilities.append(matches)
 
 
-	for i in possibilites:
+	for i in possibilities:
 		codes.append(unicodefinder(i))
 		
 	return codes

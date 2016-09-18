@@ -64,6 +64,7 @@ def divide_lines(full_array):
 
 	array_blocks = []
 
+
 	for i in line_blocks:
 		array_blocks.append(full_array[i, :])
 
@@ -71,12 +72,6 @@ def divide_lines(full_array):
 	return array_blocks
 
 
-def main (image_filename):
-	pixel_array = image_to_pixel_array(image_filename)
-	divide_lines(pixel_array)
-
-
-main('examples/eq3.jpg')
 
 
 

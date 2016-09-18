@@ -17,9 +17,6 @@ MAX_WIDTH = 960
 visited = np.zeros(shape=(MAX_HEIGHT,MAX_WIDTH),dtype=int)
 
 def floodfill(arr,line):
-	teststring = line+'.png'
-	scipy.misc.imsave(teststring, arr)
-
 	arr_shape = arr.shape
 	image_height=arr_shape[0]
 	image_width=arr_shape[1]
