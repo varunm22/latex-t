@@ -1,7 +1,4 @@
-
-
-
-def interpret_boxes(boxes):
+def interpret_boxes(boxes, codes):
 
 	spatial = {}
 
@@ -69,6 +66,9 @@ def interpret_boxes(boxes):
 		
 		for i in frac_list:
 			box_dict[i]['frac'] = frac_list
+
+	
+	return box_dict
 
 
 

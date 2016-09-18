@@ -2,12 +2,12 @@ import requests
 import re
 
 
-def unicode_list(n):
+def unicode_list(n, line):
 
 	possibilities = []
 
 	for i in range(1,n+1):
-		files = {'file': (open('outputimages/outfile'+str(n), 'rb'))}
+		files = {'file': (open('outputimages'+n+'/outfile'+str(n), 'rb'))}
 		r = requests.post('http://shapecatcher.com/engine/engine/filepost', files = files)
 		
                 matches = re.findall(r'Unicode hexadecimal: 0x([0-9a-f]{4})', r.text)
