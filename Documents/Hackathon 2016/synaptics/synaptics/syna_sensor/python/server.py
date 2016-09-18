@@ -47,6 +47,10 @@ from __future__ import print_function
 import ftd2xx as FT
 
 import sys
+import time
+import requests  
+import re
+import numpy as np
 
 try:
     import BaseHTTPServer as httpServer
@@ -155,7 +159,8 @@ class SensorInterface(object):
                 if b == 0xFF:
                     ffCount += 1
                     if ffCount == 15:
-                        print("Warning: Sensor buffer overflow")
+                        j = 0
+             #           print("Warning: Sensor buffer overflow")
                 elif ffCount >= 7 and b == 0xA5:
                     break
                 else:
@@ -163,7 +168,7 @@ class SensorInterface(object):
 
             # Read length word
             if len(self.buffer) < 2:
-                print("Discarded packet because buffer is empty")
+             #   print("Discarded packet because buffer is empty")
                 continue
 
             length = self.buffer[1] + (self.buffer[0] << 8)
@@ -175,7 +180,7 @@ class SensorInterface(object):
                 return None
 
             if length < 32:
-                print("Discarded packet shorter than minimum (%d bytes vs 32 bytes)" % (length))
+           #     print("Discarded packet shorter than minimum (%d bytes vs 32 bytes)" % (length))
                 continue # packet is shorter than minimum size
 
             packet = self.buffer[0:length]
@@ -183,7 +188,7 @@ class SensorInterface(object):
             calcCrc = crc16(packet[4:])
             txCrc = packet[3] + (packet[2] << 8)
             if calcCrc != txCrc:
-                print("Warning: Transmitted CRC %04X != %04X Calculated" % (txCrc, calcCrc))
+          #      print("Warning: Transmitted CRC %04X != %04X Calculated" % (txCrc, calcCrc))
                 continue
             packet = self.removeEscapedFFs(packet)
 
@@ -194,7 +199,7 @@ class SensorInterface(object):
 
             # accept the packet, remove it from buffer
             self.buffer[0:length] = []
-            print("Accepting packet, %d bytes long" % length)
+            #print("Accepting packet, %d bytes long" % length)
             return packet
 
     def removeEscapedFFs(self, packet):
@@ -207,7 +212,8 @@ class SensorInterface(object):
                 continue
             print(packet[i+4])
             if packet[i+4] != 0:
-                print("Warning, saw incorrect escape in FF sequence: %d" % packet[i+4])
+    #            print("Warning, saw incorrect escape in FF sequence: %d" % packet[i+4])
+                j = 0
             del packet[i+4]
             i += 1
         return packet
@@ -220,9 +226,10 @@ class SensorInterface(object):
         while rx == 65536:
             (rx, tx, stat) = self.sensor.getStatus()
             buf = self.sensor.read(rx)
-            print("Read %d bytes" % len(buf))
+      #      print("Read %d bytes" % len(buf))
             if rx == 65536:
-                print("Discarding buffer...")
+     #           print("Discarding buffer...")
+                j = 0
 
         if sys.version_info[0] < 3:
             buf = [ord(x) for x in buf]
@@ -284,6 +291,10 @@ class MyHttpHandler(httpServer.BaseHTTPRequestHandler):
 
 def Main(port):
     global sensor
+    timeIncrement = 0.05
+    threshold = 1
+    timeThreshold = 2.5
+    frobthresh = 250
     sensor = SensorInterface()
     try:
         sensor.connect()
@@ -292,14 +303,76 @@ def Main(port):
         raise
         return
 
-    server = httpServer.HTTPServer(('', port), MyHttpHandler)
+#    server = httpServer.HTTPServer(('', port), MyHttpHandler)
+#
+#    try:
+#        server.serve_forever()
+#    except KeyboardInterrupt:
+#        pass
 
-    try:
-        server.serve_forever()
-    except KeyboardInterrupt:
-        pass
+    while True:
+        strokes = [[]]
+        last = []
+        timeOfLastInput = time.time()
+        first = None
+        while True:
+            time.sleep(timeIncrement)
+            allim = sensor.getAllImages()        
+            if len(allim) == 0:
+                continue
+            if first == None:
+                first = allim[-1]
+            img = allim[-1]
+            #print (img['image'])       
+            pixfirst = first['image']
+            pixlast = img['image']    
+            if np.sqrt(np.sum((np.array(pixfirst)-np.array(pixlast))**2)) > frobthresh:                     
+                #print (np.sqrt(np.sum((np.array(pixfirst)-np.array(pixlast))**2)))             
+                submat = [[pixfirst[i][j]-pixlast[i][j] for j in range(len(pixlast[i]))]for i in range(len(pixlast))]        
+                (x,y, val) = findMin(submat)
+                (x2,y2,val2) = findMax(submat)
+                print (val2)            
+                if time.time() - timeOfLastInput <= threshold:  
+                    strokes[-1].append([x2*(500/float(45)),(60-y2)*(200/float(60))])
+                    timeOfLastInput = time.time()
+                else:
+                    print ("NEW STROKE")                
+                    strokes.append([])  
+                    timeOfLastInput = time.time()
+                last = img
+            #print (time.time() - timeOfLastInput)
+            if time.time() - timeOfLastInput >= timeThreshold:
+                break   
+        print (strokes)
+        temp = str(strokes)
+        r = requests.post('http://cat.prhlt.upv.es/mer/eq.php', data ={'strokes': temp})
+        print (r.text)
 
-    sensor.close()
+    
+def findMax(pixelarray):
+    temp = -100
+    x = 0
+    y = 0    
+    for i in range(len(pixelarray)):
+        for j in range(len(pixelarray[i])):
+            if pixelarray[i][j] > temp:
+                x = i
+                y = j
+                temp = pixelarray[i][j]
+    return (x, y, temp)
+
+def findMin(pixelarray):
+    temp = 1000000000000000
+    x = 0
+    y = 0    
+    for i in range(5,len(pixelarray)-5):
+        for j in range(5,len(pixelarray[i])-5):
+            if pixelarray[i][j] < temp:
+                x = i
+                y = j
+                temp = pixelarray[i][j]
+    return (x,y,temp)
+
 
 if __name__ == '__main__':
     port = 8080
