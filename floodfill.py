@@ -16,14 +16,14 @@ MAX_WIDTH = 960
 #counter = 0
 visited = np.zeros(shape=(MAX_HEIGHT,MAX_WIDTH),dtype=int)
 
-def floodfill(arr):
+def floodfill(arr,line):
 	arr_shape = arr.shape
 	image_height=arr_shape[0]
 	image_width=arr_shape[1]
 	
-	os.system('rm -r outputimages')
-	os.system('rmdir outputimages')
-	os.system('mkdir outputimages')
+	folderstring = 'outputimages'+line
+	os.system('rm -r '+folderstring)
+	os.system('mkdir '+folderstring)
 	
 	
 	characters = []
@@ -32,19 +32,19 @@ def floodfill(arr):
 		for j in xrange(image_width):
 			#print visited[i,j]
 			if ((visited[i,j]==0) and (arr[i,j]==1)):
-				chartuple = DFS(i,j,count,arr)
+				chartuple = DFS(i,j,count,arr,folderstring)
 				characters.append(chartuple)
 				count +=1
 			visited[i,j]=1
 				
 
-	print len(characters)
+	#print "The number of characters is" + str(len(characters))
 	return characters
 	
 
 #Yes, I know this is a BFS. 
 
-def DFS(i,j,counter,arr):
+def DFS(i,j,counter,arr,folderstring):
 	#print i,j
 
 	block = []
@@ -92,14 +92,31 @@ def DFS(i,j,counter,arr):
 		out_array = np.ones(shape=(max_x-min_x+1,max_y-min_y+1),dtype=int)
 		for k in xrange(len(block)):
 			out_array[block[k][0]-min_x,block[k][1]-min_y]=0
-		outstring = 'outputimages/outfile'+str(counter)+'.png'
+		vert = hackywhitespaceremover(out_array)
+		#print vert
+		if vert is not 0:
+			#print counter,vert
+			out_array = out_array[:,vert:]
+		outstring = folderstring + '/outfile'+str(counter)+'.png'
 		scipy.misc.imsave(outstring, out_array)
-	print character_size
+	#print character_size
 	bottom_corner = (min_x,min_y)
 	top_corner = (max_x,max_y)
 	return (bottom_corner,top_corner)
 
-		
+
+def hackywhitespaceremover(blah_array):
+	vert = 0
+	#print blah_array.shape
+	for j in range(blah_array.shape[1]):
+		for i in range(blah_array.shape[0]):
+			if blah_array[i,j] == 0:
+				return vert
+		vert +=1
+	#print "wat!"
+	
+	
+					
 		
 	
 			
