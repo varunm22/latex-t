@@ -17,10 +17,12 @@ MAX_WIDTH = 960
 visited = np.zeros(shape=(MAX_HEIGHT,MAX_WIDTH),dtype=int)
 
 def floodfill(arr,line):
-	teststring = line+'.png'
-	scipy.misc.imsave(teststring, arr)
+	#teststring = line+'.png'
+	#scipy.misc.imsave(teststring, arr)
 
 	arr_shape = arr.shape
+	print arr_shape
+
 	image_height=arr_shape[0]
 	image_width=arr_shape[1]
 	
@@ -52,7 +54,7 @@ def DFS(i,j,counter,arr,folderstring):
 	#print i,j
 
 	block = []
-
+	print "Found an island!"
 	dfs = Queue.Queue()
 	dfs.put((i,j))
 	visited[i,j] = 1
