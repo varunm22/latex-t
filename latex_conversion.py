@@ -9,13 +9,18 @@ def convert(box_info, spatial_list, codes):
 			i += 2
 			latex_string+=codes[spatial_list[i]] + '}'
 
+
 		elif box_info[spatial_list[i]]['equal'] != None:
 			latex_string+="="
 			i+=1
 
 		elif box_info[spatial_list[i]]['super']:
 			latex_string+='^'
-		latex_string+= codes[spatial_list[i]]
+			latex_string+= codes[spatial_list[i]]
+
+		else:
+
+			latex_string+= codes[spatial_list[i]]
 		i += 1
 
 	latex_string+='$ \n \n'

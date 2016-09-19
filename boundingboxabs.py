@@ -83,9 +83,9 @@ def interpret_boxes(boxes, codes):
 			print minus_count
 
 		if layer_count == 3:
-			box_dict[endpoints[i][2]]['frac'] = [endpoints[i-2][2],endpoints[i-1][2],endpoints[i][2]]
-			box_dict[endpoints[i-1][2]]['frac'] = [endpoints[i-2][2],endpoints[i-1][2],endpoints[i][2]]
-			box_dict[endpoints[i-2][2]]['frac'] = [endpoints[i-2][2],endpoints[i-1][2],endpoints[i][2]]
+			box_dict[endpoints[i][2]]['frac'] = [endpoints[i-1][2],endpoints[i-2][2],endpoints[i][2]]
+			box_dict[endpoints[i-1][2]]['frac'] = [endpoints[i-1][2],endpoints[i-2][2],endpoints[i][2]]
+			box_dict[endpoints[i-2][2]]['frac'] = [endpoints[i-1][2],endpoints[i-2][2],endpoints[i][2]]
  
 		if minus_count == 2:
 			box_dict[endpoints[i][2]]['equal'] = [endpoints[i][2],endpoints[i-1][2]]
